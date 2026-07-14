@@ -1,0 +1,76 @@
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 20px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: 1px solid #fff;
+}
+.task-content {
+    flex: 1;
+    margin-right: 16px;
+    min-width: 0;
+}
+.task-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.task-header input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 0;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.task-title {
+    margin: 0;
+    font-size: 18px;
+}
+.task-title.completed {
+    text-decoration: line-through;
+}
+
+.task-description-content {
+    margin-left: 32px;
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.task-description {
+    margin: 8px 0 0 32px;
+    font-size: 15px;
+    padding: 4px 0;
+}
+.task-description.completed {
+    text-decoration: line-through;
+}
+
+.task-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.taskDelete-btn,
+.taskChange-btn{
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 4px;
+    color: #dbdbdb;
+    background: #727272;
+    border: 1px solid #000;
+}
+
+.task-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+

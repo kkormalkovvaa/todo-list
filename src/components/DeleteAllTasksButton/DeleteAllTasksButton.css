@@ -1,0 +1,12 @@
+.delete-all-btn {
+    padding: 10px 24px;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px auto;
+}

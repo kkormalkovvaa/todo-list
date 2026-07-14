@@ -1,0 +1,26 @@
+.input-task {
+    max-width: 600px;
+    margin: 20px auto;
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-title,
+.input-description {
+    padding: 14px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+}
+
+.addTask-btn {
+    padding: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    align-self: center;
+}
