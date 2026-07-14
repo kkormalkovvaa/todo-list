@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { taskApi } from "../api/clientApi";
 
 const initialState = { items: [], loading: false, errors: null };
 
@@ -14,23 +15,9 @@ export const getTasks = createAsyncThunk(
   "tasks/getTasks",
   async (_, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("Необходимо авторизации");
-      }
-
-      const response = await fetch(
-        "https://todo-redev.onrender.com/api/todos?page=1&limit=10",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const { data } = await response.json();
+      const data = await taskApi.getTasks();
       console.log("tasks: ", data);
+
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -42,26 +29,9 @@ export const addTasks = createAsyncThunk(
   "tasks/addTasks",
   async (body, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("Необходима авторизация");
-      }
-
-      const response = await fetch(
-        "https://todo-redev.onrender.com/api/todos",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        },
-      );
-      const data = await response.json();
-      console.log(data.data || data);
-      return data.data || data;
+      const data = await taskApi.createTask(body);
+      console.log("Созданная задача: ", data);
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -72,26 +42,7 @@ export const deleteTasks = createAsyncThunk(
   "tasks/deleteTasks",
   async (id, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://todo-redev.onrender.com/api/todos/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        let errorMessage = "Ошибка удаления задачи";
-        try {
-          const data = await response.json();
-        } catch (e) {
-          errorMessage = `Ошибка ${response.status} ${response.statusText}`;
-        }
-        throw new Error(errorMessage);
-      }
+      await taskApi.deleteTask(id);
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -103,25 +54,7 @@ export const toggleTaskStatus = createAsyncThunk(
   "tasks/toggleTaskStatus",
   async ({ id, completed }, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("Необходима авторизация");
-      }
-
-      const response = await fetch(
-        `https://todo-redev.onrender.com/api/todos/${id}/toggle`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ completed: !completed }),
-        },
-      );
-
-      const data = await response.json();
+      const data = await taskApi.toggleTask(id, !completed);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -133,22 +66,12 @@ export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ id, title, description, completed }, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(
-        `https://todo-redev.onrender.com/api/todos/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ title, description, completed }),
-        },
-      );
-
-      const data = await response.json();
-      return data.data || data;
+      const data = await taskApi.updateTask(id, {
+        title,
+        description,
+        completed,
+      });
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -159,17 +82,7 @@ export const deleteAllTasks = createAsyncThunk(
   "tasks/deleteAllTasks",
   async (_, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch(
-        "https://todo-redev.onrender.com/api/todos",
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await taskApi.deleteAllTasks();
       return true;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

@@ -21,7 +21,7 @@ const TodoList = ({deleteTask, isChecked}) => {
 
     return(
         <div className="tasks-list">
-            {tasks.length == 0 && <h1>У вас пока нет задач</h1>}
+            {tasks.length === 0 && <h1>У вас пока нет задач</h1>}
             {tasks.map(task => {
                 return (<Task isChecked={isChecked} deleteTask={deleteTask} key={task.id || task._id} task={task} />)
             })}

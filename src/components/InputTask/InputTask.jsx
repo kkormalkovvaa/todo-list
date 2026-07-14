@@ -16,6 +16,10 @@ const InputTask = () => {
         dispatch(changeDescription(e.target.value))
     }
     const handleClick = () => {
+        if (!value.trim()) {
+            alert("Введите название задачи");
+            return;
+        }
         dispatch(addTasks({title: value, description: description, completed: false}))
         dispatch(zero())
     }

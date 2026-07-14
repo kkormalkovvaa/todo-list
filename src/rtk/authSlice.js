@@ -1,27 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { authApi } from "../api/clientApi";
+
+const initialState = {
+  user: null,
+  token: localStorage.getItem("token") || null,
+  isAuthenticated: !!localStorage.getItem("token"),
+  loading: false,
+  error: null,
+};
 
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, thunkAPI) => {
     try {
-      const response = await fetch(
-        "https://todo-redev.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        },
-      );
+      const data = await authApi.login(credentials);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message || "Ошибка входа");
+      const token = data.access_token;
+      if (token) {
+        localStorage.setItem("token", token);
       }
-
-      localStorage.setItem("token", data.access_token || data.token);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -33,21 +30,11 @@ export const registerUser = createAsyncThunk(
   "auth/register",
   async (credentials, thunkAPI) => {
     try {
-      const response = await fetch(
-        "https://todo-redev.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        },
-      );
+      const data = await authApi.register(credentials);
+      const token = data.access_token;
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return thunkAPI.rejectWithValue(data.message || "Ошибка регистрации");
+      if (token) {
+        localStorage.setItem("token", token);
       }
 
       return data;
@@ -56,14 +43,6 @@ export const registerUser = createAsyncThunk(
     }
   },
 );
-
-const initialState = {
-  user: null,
-  token: localStorage.getItem("token") || null,
-  isAuthenticated: !!localStorage.getItem("token"),
-  loading: false,
-  error: null,
-};
 
 const authSlice = createSlice({
   name: "auth",
@@ -95,7 +74,7 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
-        setInterval.error = action.payload;
+        state.error = action.payload;
       })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;

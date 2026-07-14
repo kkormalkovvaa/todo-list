@@ -13,7 +13,7 @@ const Register = () => {
     const {loading, error} = useSelector((store)=> store.auth)
 
     const handleSubmit = (e)=> {
-        e.prevent.default()
+        e.preventDefault()
         dispatch(clearError())
         dispatch(registerUser({email, password, name}))
     }
